@@ -29,6 +29,7 @@ Route::group(['prefix' => 'user'], function(){
     Route::get('/create_ajax', [UserController::class, 'create_ajax']);
     Route::post('/ajax',[UserController::class,'store_ajax']);
     Route::get('/{id}', [UserController::class, 'show']);       // menampilkan detail user
+    Route::get('/{id}/show_ajax', [UserController::class, 'show_ajax']);
     Route::get('/{id}/edit', [UserController::class, 'edit']);  // menampilkan halaman form edit user
     Route::put('/{id}', [UserController::class, 'update']);     // menyimpan perubahan data user
     Route::get('/{id}/edit_ajax', [UserController::class, 'edit_ajax']);
@@ -42,10 +43,17 @@ Route::group(['prefix' => 'level'], function(){
     Route::get('/', [LevelController::class, 'index']);          
     Route::post('/list', [LevelController::class, 'list']);      
     Route::get('/create', [LevelController::class, 'create']);   
-    Route::post('/', [LevelController::class, 'store']);         
-    Route::get('/{id}', [LevelController::class, 'show']);       
+    Route::post('/', [LevelController::class, 'store']);
+    Route::get('/create_ajax', [LevelController::class, 'create_ajax']);
+    Route::post('/ajax',[LevelController::class,'store_ajax']);         
+    Route::get('/{id}', [LevelController::class, 'show']);    
+    Route::get('/{id}/show_ajax', [LevelController::class, 'show_ajax']);   
     Route::get('/{id}/edit', [LevelController::class, 'edit']);  
-    Route::put('/{id}', [LevelController::class, 'update']);     
+    Route::put('/{id}', [LevelController::class, 'update']);
+    Route::get('/{id}/edit_ajax', [LevelController::class, 'edit_ajax']);
+    Route::put('/{id}/update_ajax', [LevelController::class, 'update_ajax']);
+    Route::get('/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']);
+    Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']);     
     Route::delete('/{id}', [LevelController::class, 'destroy']); 
 });
 
@@ -56,7 +64,14 @@ Route::group(['prefix' => 'kategori'], function(){
     Route::post('/', [KategoriController::class, 'store']);         
     Route::get('/{id}', [KategoriController::class, 'show']);       
     Route::get('/{id}/edit', [KategoriController::class, 'edit']);  
-    Route::put('/{id}', [KategoriController::class, 'update']);     
+    Route::put('/{id}', [KategoriController::class, 'update']);
+    Route::get('/create_ajax', [KategoriController::class, 'create_ajax']);
+    Route::post('/ajax',[KategoriController::class,'store_ajax']);
+    Route::get('/{id}/show_ajax', [KategoriController::class, 'show_ajax']);
+    Route::get('/{id}/edit_ajax', [KategoriController::class, 'edit_ajax']);
+    Route::put('/{id}/update_ajax', [KategoriController::class, 'update_ajax']);
+    Route::get('/{id}/delete_ajax', [KategoriController::class, 'confirm_ajax']);
+    Route::delete('/{id}/delete_ajax', [KategoriController::class, 'delete_ajax']);    
     Route::delete('/{id}', [KategoriController::class, 'destroy']); 
 });
 
