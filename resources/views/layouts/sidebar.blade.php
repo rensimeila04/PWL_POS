@@ -67,6 +67,62 @@
                     <p>Transaksi Penjualan</p>
                 </a>
             </li>
+            <!-- Item Logout -->
+            <li class="nav-header">Pengaturan</li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" id="logout-btn">
+                    <i class="nav-icon fas fa-sign-out-alt"></i>
+                    <p>Logout</p>
+                </a>
+            </li>
         </ul>
     </nav>
 </div>
+
+<!-- Tambahkan script berikut di bagian bawah file layout (sebelum </body>) -->
+<script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        $('#logout-btn').click(function(e) {
+            e.preventDefault();
+            
+            Swal.fire({
+                title: 'Konfirmasi',
+                text: 'Apakah Anda yakin ingin logout?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Logout',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit form logout
+                    $.ajax({
+                        url: '{{ url("logout") }}',
+                        type: 'GET',
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: 'Anda telah logout',
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(function() {
+                                window.location = '{{ url("login") }}';
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Terjadi kesalahan saat logout'
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
