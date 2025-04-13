@@ -4,9 +4,12 @@
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
-                <a href="{{ url('/user/export_excel') }}" class="btn btn-sm btn-primary mt-1"><i class="fa fa-file-excel"></i> Export User</a>
-                <a href="{{ url('/user/export_pdf') }}" class="btn btn-sm btn-warning mt-1"><i class="fa fa-file-pdf"></i> Export User</a>
-                <button onclick="modalAction('{{ url('user/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
+                <a href="{{ url('/user/export_excel') }}" class="btn btn-sm btn-primary mt-1"><i class="fa fa-file-excel"></i>
+                    Export User</a>
+                <a href="{{ url('/user/export_pdf') }}" class="btn btn-sm btn-warning mt-1"><i class="fa fa-file-pdf"></i>
+                    Export User</a>
+                <button onclick="modalAction('{{ url('user/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah
+                    Ajax</button>
                 <button onclick="modalAction('{{ url('/user/import') }}')" class="btn btn-sm btn-info">Import User</button>
             </div>
         </div>
@@ -37,10 +40,10 @@
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Foto Profil</th>
                         <th>Username</th>
                         <th>Nama</th>
-                        <th>Level
-                            Pengguna</th>
+                        <th>Level Pengguna</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -52,6 +55,14 @@
 @endsection
 
 @push('css')
+    <style>
+        .profile-photo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
 @endpush
 
 @push('js')
@@ -64,7 +75,6 @@
         var dataUser;
         $(document).ready(function() {
             var dataUser = $('#table_user').DataTable({
-                // serverSide: true, jika ingin menggunakan server side processing 
                 serverSide: true,
                 ajax: {
                     "url": "{{ url('user/list') }}",
@@ -75,17 +85,26 @@
                     }
                 },
                 columns: [{
-                    // nomor urut dari laravel datatable addIndexColumn() 
                     data: "DT_RowIndex",
                     className: "text-center",
                     orderable: false,
                     searchable: false
                 }, {
+                    data: "profile_photo",
+                    className: "text-center",
+                    orderable: false,
+                    searchable: false,
+                    render: function(data) {
+                        if (data) {
+                            return '<img src="{{ asset('storage/') }}/' + data +
+                                '" class="profile-photo" alt="Foto Profil">';
+                        }
+                        return '<img src="{{ asset('default-profile.png') }}" class="profile-photo" alt="Default Profil">';
+                    }
+                }, {
                     data: "username",
                     className: "",
-                    // orderable: true, jika ingin kolom ini bisa diurutkan  
                     orderable: true,
-                    // searchable: true, jika ingin kolom ini bisa dicari 
                     searchable: true
                 }, {
                     data: "nama",
@@ -93,7 +112,6 @@
                     orderable: true,
                     searchable: true
                 }, {
-                    // mengambil data level hasil dari ORM berelasi 
                     data: "level.level_nama",
                     className: "",
                     orderable: false,

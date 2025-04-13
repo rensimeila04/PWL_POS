@@ -1,4 +1,4 @@
-<form action="{{ url('/user/ajax') }}" method="POST" id="form-tambah">
+<form action="{{ url('/user/ajax') }}" method="POST" id="form-tambah" enctype="multipart/form-data">
     @csrf
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -33,6 +33,12 @@
                     <input value="" type="password" name="password" id="password" class="form-control" required>
                     <small id="error-password" class="error-text form-text text-danger"></small>
                 </div>
+                <div class="form-group">
+                    <label>Foto Profil</label>
+                    <input type="file" name="profile_photo" id="profile_photo" class="form-control" accept="image/*">
+                    <small class="form-text text-muted">Ukuran maksimal 2MB, format: JPG, PNG</small>
+                    <small id="error-profile_photo" class="error-text form-text text-danger"></small>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
@@ -63,13 +69,26 @@
                     required: true,
                     minlength: 6,
                     maxlength: 20
+                },
+                profile_photo: {
+                    extension: "jpg|jpeg|png",
+                    maxsize: 2097152 // 2MB dalam bytes
+                }
+            },
+            messages: {
+                profile_photo: {
+                    extension: "File harus berformat JPG atau PNG",
+                    maxsize: "Ukuran file maksimal 2MB"
                 }
             },
             submitHandler: function(form) {
+                const formData = new FormData(form);
                 $.ajax({
                     url: form.action,
                     type: form.method,
-                    data: $(form).serialize(),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     success: function(response) {
                         if (response.status) {
                             $('#myModal').modal('hide');
@@ -105,6 +124,13 @@
             unhighlight: function(element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
             }
+        });
+        // Custom validator untuk maxsize
+        $.validator.addMethod("maxsize", function(value, element, param) {
+            if (element.files.length > 0) {
+                return element.files[0].size <= param;
+            }
+            return true;
         });
     });
 </script>

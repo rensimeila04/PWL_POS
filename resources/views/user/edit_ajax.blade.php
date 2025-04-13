@@ -17,7 +17,8 @@
         </div>
     </div>
 @else
-    <form action="{{ url('/user/' . $user->user_id . '/update_ajax') }}" method="POST" id="form-edit">
+    <form action="{{ url('/user/' . $user->user_id . '/update_ajax') }}" method="POST" id="form-edit"
+        enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -63,6 +64,20 @@
                         <small class="form-text text-muted">Abaikan jika tidak ingin ubah password</small>
                         <small id="error-password" class="error-text form-text text-danger"></small>
                     </div>
+
+                    <div class="form-group">
+                        <label>Foto Profil</label>
+                        @if ($user->profile_photo)
+                            <div class="mb-2">
+                                <img src="{{ asset('storage/' . $user->profile_photo) }}" alt="Foto Profil"
+                                    style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+                            </div>
+                        @endif
+                        <input type="file" name="profile_photo" id="profile_photo" class="form-control" accept="image/*">
+                        <small class="form-text text-muted">Ukuran maksimal 2MB, format: JPG, PNG. Abaikan jika tidak ingin
+                            mengubah foto.</small>
+                        <small id="error-profile_photo" class="error-text form-text text-danger"></small>
+                    </div>
                 </div>
 
                 <div class="modal-footer">
@@ -94,13 +109,26 @@
                     password: {
                         minlength: 6,
                         maxlength: 20
+                    },
+                    profile_photo: {
+                        extension: "jpg|jpeg|png",
+                        maxsize: 2097152 // 2MB dalam bytes
+                    }
+                },
+                messages: {
+                    profile_photo: {
+                        extension: "File harus berformat JPG atau PNG",
+                        maxsize: "Ukuran file maksimal 2MB"
                     }
                 },
                 submitHandler: function(form) {
+                    const formData = new FormData(form);
                     $.ajax({
                         url: form.action,
                         type: form.method,
-                        data: $(form).serialize(),
+                        data: formData,
+                        processData: false,
+                        contentType: false,
                         success: function(response) {
                             if (response.status) {
                                 $('#myModal').modal('hide');
@@ -136,6 +164,13 @@
                 unhighlight: function(element) {
                     $(element).removeClass('is-invalid');
                 }
+            });
+            // Custom validator untuk maxsize
+            $.validator.addMethod("maxsize", function(value, element, param) {
+                if (element.files.length > 0) {
+                    return element.files[0].size <= param;
+                }
+                return true;
             });
         });
     </script>
