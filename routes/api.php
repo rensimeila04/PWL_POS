@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LevelController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\KategoriController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,3 +37,10 @@ Route::post('users', [UserController::class, 'store']);
 Route::get('users/{user}', [UserController::class, 'show']);
 Route::put('users/{user}', [UserController::class, 'update']);
 Route::delete('users/{user}', [UserController::class, 'destroy']);
+
+//Kategori
+Route::get('kategori', [KategoriController::class, 'index']);
+Route::post('kategori', [KategoriController::class, 'store']);
+Route::get('kategori/{kategori}', [KategoriController::class, 'show']);
+Route::put('kategori/{kategori}', [KategoriController::class, 'update']);
+Route::delete('kategori/{kategori}', [KategoriController::class, 'destroy']);
